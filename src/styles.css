@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.errorMessage {color: red;font-size: 0.7rem;margin-bottom: 0.5rem;}
+
+label { font-size: 0.9rem; }
+
+.form-row { margin-top: 0.9rem;}
+
+.regDialog {
+    width: 50vw;
+    height: 50vw;
+}
+
+@media screen and (max-width: 40em) {
+    .regDialog {
+        width: 75vw;
+        height: 75vw;
+    }
+}
