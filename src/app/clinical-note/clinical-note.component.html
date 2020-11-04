@@ -1,0 +1,22 @@
+<div class="p-grid">
+    <div class="p-col-6">
+        <h2>Patient Name</h2>
+        <p>Gender: </p>
+        <p>DOB: </p>
+    </div>
+    <div class="p-col-6" style="text-align: right;">
+        <h1>Add Clinical Note</h1>
+    </div> 
+</div>
+<div class="p-grid">
+    <div class="p-col-2">
+        <button pButton icon="pi pi-comment" label="Speak"></button> 
+    </div>
+    <div class="p-col-6" style="margin-top: 0.5rem;">
+        <span>Click the speak button and begin speaking...</span>
+    </div>
+</div>
+<p-editor [(ngModel)]="text" [style]="{'height':'320px'}"></p-editor>
+<p>When you finish the note, please review and edit as needed.  The bold text has been used to retrieve information from the patient’s medical record.</p>
+<button pButton icon="pi pi-check" label="Save Note" style="margin-right: 2rem;"></button> 
+<button pButton label="Cancel" (click)="cancel()"></button> 

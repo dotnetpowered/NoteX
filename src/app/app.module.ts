@@ -15,15 +15,18 @@ import {InputNumberModule} from 'primeng/inputnumber';
 import {CalendarModule} from 'primeng/calendar';
 import {DialogModule} from 'primeng/dialog';
 import {CheckboxModule} from 'primeng/checkbox';
-import { DropdownModule } from 'primeng/dropdown';
+import {DropdownModule} from 'primeng/dropdown';
+import {EditorModule} from 'primeng/editor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { ClinicalNoteComponent } from './clinical-note/clinical-note.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LaunchComponent,
     DashboardComponent,
+    ClinicalNoteComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +37,7 @@ import { HttpClientModule } from '@angular/common/http';
     TableModule,
     InputTextModule,
     InputNumberModule,
+    EditorModule,
     DropdownModule,
     BrowserAnimationsModule,
     CalendarModule,
