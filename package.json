@@ -23,6 +23,7 @@
     "@types/fhir-js-client": "^1.0.0",
     "core-js": "^2.5.4",
     "fhir-js-client": "git+https://github.com/nikhil-grh/client-js",
+    "microsoft-cognitiveservices-speech-sdk": "^1.14.0",
     "primeflex": "^2.0.0",
     "primeicons": "^4.0.0",
     "primeng": "^10.0.3",

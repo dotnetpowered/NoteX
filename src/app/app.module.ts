@@ -20,6 +20,7 @@ import {EditorModule} from 'primeng/editor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ClinicalNoteComponent } from './clinical-note/clinical-note.component';
+import { Globals } from './shared/globals';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import { ClinicalNoteComponent } from './clinical-note/clinical-note.component';
     CheckboxModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [Globals],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
