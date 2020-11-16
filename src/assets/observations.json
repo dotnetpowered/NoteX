@@ -1,0 +1,58 @@
+[
+    {
+        "name": "Weight",
+        "coding": [
+            {
+                "system": "http://loinc.org",
+                "code": "29463-7",
+                "display": "Body Weight"
+              },
+              {
+                "system": "http://loinc.org",
+                "code": "3141-9",
+                "display": "Body weight Measured"
+              },
+              {
+                "system": "http://snomed.info/sct",
+                "code": "27113001",
+                "display": "Body weight"
+              },
+              {
+                "system": "http://acme.org/devices/clinical-codes",
+                "code": "body-weight",
+                "display": "Body Weight"
+              }
+        ]
+
+    },
+    {
+        "name": "Diastolic blood pressure",
+        "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8462-4",
+              "display": "Diastolic blood pressure"
+            }
+          ]
+    },
+    {
+        "name": "Systolic blood pressure",
+        "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "8480-6",
+              "display": "Systolic blood pressure"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "271649006",
+              "display": "Systolic blood pressure"
+            },
+            {
+              "system": "http://acme.org/devices/clinical-codes",
+              "code": "bp-s",
+              "display": "Systolic Blood pressure"
+            }
+          ]
+    }
+]

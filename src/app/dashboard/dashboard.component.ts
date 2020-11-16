@@ -16,7 +16,7 @@ export class DashboardComponent implements OnInit {
   user: any;
   notes: any[];
 
-  constructor(private router: Router, private gloabls: Globals) { }
+  constructor(private router: Router, private globals: Globals) { }
 
   addNote(): void {
      this.router.navigate(['clinical-note']);
@@ -36,11 +36,25 @@ export class DashboardComponent implements OnInit {
         }
 
       );
+      let query = <FHIR.SMART.SearchParams>{
+        type: 'Observation',
+        query: { 'patient': client.patient.id}
+      };
+      client.api.search(query).then(
+        response=>{
+          let ob = <FHIR.SMART.Resource[]>response.data.entry;
+          this.globals.observations = ob;
+          //this.globals.byCodes = client.byCodes(ob);
+          console.log(response);
+          this.nextPage(client, this.globals.observations, response.data);
+          //console.log(this.globals.observations);
+        }
+      );
       client.patient.read().then(
         (response)=>{
           console.log('patient', response);
           this.patient = response;
-          this.gloabls.patient = response;
+          this.globals.patient = response;
         }
       );
       client.user.read().then((response)=>
@@ -51,4 +65,14 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  nextPage(client: FHIR.SMART.Client, rows: any[], bundle: FHIR.SMART.Bundle) {
+    console.log('paging');
+    client.api.nextPage(bundle).then( (response)=> {
+      console.log('page response', response);
+      if (response.data !=null) {
+        rows.push(response.data);
+        this.nextPage(client, rows, response.data);
+      }
+    }).catch(reason=>console.log(reason));
+  }
 }

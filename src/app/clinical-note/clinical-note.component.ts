@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { Globals } from '../shared/globals';
+import { MappingService } from '../shared/mapping.service';
 
 @Component({
   selector: 'app-clinical-note',
   templateUrl: './clinical-note.component.html',
-  styleUrls: ['./clinical-note.component.css']
+  styleUrls: ['./clinical-note.component.css'],
+  providers: [MappingService]
 })
 export class ClinicalNoteComponent implements OnInit {
 
@@ -18,13 +20,14 @@ export class ClinicalNoteComponent implements OnInit {
   language: any;
   patient: any;
 
-  constructor(private router: Router, private gloabls: Globals)  {
+  constructor(private router: Router, private globals: Globals,
+    private mappingSvc: MappingService)  {
     this.language = 'en';
   }
 
   ngOnInit(): void {
  
-    this.patient = this.gloabls.patient;
+    this.patient = this.globals.patient;
   }
 
   cancel(): void {
@@ -43,8 +46,11 @@ export class ClinicalNoteComponent implements OnInit {
     this.recognizer.recognizeOnceAsync((result)=> {
 
       let translation = result.translations.get(this.language);
-      window.console.log(translation);
+      console.log(translation);
+      console.log('Using', this.globals.observations);
       this.text = translation;
+      
+      this.mappingSvc.mapping(this.text.split(' '), this.globals.observations);
 
       this.recognizer.close();
       this.recognizer = undefined;
