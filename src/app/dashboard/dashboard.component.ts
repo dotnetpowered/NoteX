@@ -11,7 +11,6 @@ import { Globals } from '../shared/globals';
 })
 export class DashboardComponent implements OnInit {
 
-  fhirClient: FHIR.SMART.Client;
   patient: any;
   user: any;
   notes: any[];
@@ -24,55 +23,30 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('checking oauth2 ready');
-    FHIR.oauth2.ready((client)=>{
-      console.log('state',client.state);
-      console.log('id',client.patient.id);
+    FHIR.oauth2.ready((client) => {
+      console.log('state', client.state);
+      console.log('id', client.patient.id);
       console.log('client', client);
-      this.fhirClient = client;
-      client.patient.api.fetchAll({ type:"DocumentReference" }).then(
-        (response)=>{
+      this.globals.fhirClient = client;
+      client.patient.api.fetchAll({ type:'DocumentReference' }).then(
+        (response) => {
           this.notes = response;
           console.log(this.notes);
         }
 
       );
-      let query = <FHIR.SMART.SearchParams>{
-        type: 'Observation',
-        query: { 'patient': client.patient.id}
-      };
-      client.api.search(query).then(
-        response=>{
-          let ob = <FHIR.SMART.Resource[]>response.data.entry;
-          this.globals.observations = ob;
-          //this.globals.byCodes = client.byCodes(ob);
-          console.log(response);
-          this.nextPage(client, this.globals.observations, response.data);
-          //console.log(this.globals.observations);
-        }
-      );
       client.patient.read().then(
-        (response)=>{
+        (response) => {
           console.log('patient', response);
           this.patient = response;
           this.globals.patient = response;
         }
       );
-      client.user.read().then((response)=>
+      client.user.read().then((response) =>
       {
          console.log('user', response);
          this.user = response;
-      })
+      });
     });
-  }
-
-  nextPage(client: FHIR.SMART.Client, rows: any[], bundle: FHIR.SMART.Bundle) {
-    console.log('paging');
-    client.api.nextPage(bundle).then( (response)=> {
-      console.log('page response', response);
-      if (response.data !=null) {
-        rows.push(response.data);
-        this.nextPage(client, rows, response.data);
-      }
-    }).catch(reason=>console.log(reason));
   }
 }

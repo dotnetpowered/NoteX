@@ -9,6 +9,6 @@
     },
     {
         "keyword": "hypertension",
-        "observation": ["Diastolic blood pressure", "Systolic blood pressure"]
+        "observation": ["Blood Pressure"]
     }
 ]

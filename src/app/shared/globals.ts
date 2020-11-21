@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class Globals {
   patient: any;
-  observations: any[];
+  fhirClient: FHIR.SMART.Client;
   byCodes: (...codes: string[]) => FHIR.SMART.Resource[];
 }

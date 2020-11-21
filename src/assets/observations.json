@@ -26,33 +26,13 @@
 
     },
     {
-        "name": "Diastolic blood pressure",
-        "coding": [
-            {
-              "system": "http://loinc.org",
-              "code": "8462-4",
-              "display": "Diastolic blood pressure"
-            }
-          ]
-    },
-    {
-        "name": "Systolic blood pressure",
-        "coding": [
-            {
-              "system": "http://loinc.org",
-              "code": "8480-6",
-              "display": "Systolic blood pressure"
-            },
-            {
-              "system": "http://snomed.info/sct",
-              "code": "271649006",
-              "display": "Systolic blood pressure"
-            },
-            {
-              "system": "http://acme.org/devices/clinical-codes",
-              "code": "bp-s",
-              "display": "Systolic Blood pressure"
-            }
-          ]
+       "name" :"Blood Pressure",
+       "coding": [
+         {
+          "system": "http://loinc.org",
+          "code": "55284-4",
+          "display": "Blood Pressure"        
+         }
+       ]
     }
 ]

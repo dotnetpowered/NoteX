@@ -46,11 +46,39 @@ export class ClinicalNoteComponent implements OnInit {
     this.recognizer.recognizeOnceAsync((result)=> {
 
       let translation = result.translations.get(this.language);
-      console.log(translation);
-      console.log('Using', this.globals.observations);
+      console.log('Captured text: ' + translation);
       this.text = translation;
       
-      this.mappingSvc.mapping(this.text.split(' '), this.globals.observations);
+      const keywords = this.text.split(' ');
+      this.mappingSvc.client = this.globals.fhirClient;
+      this.mappingSvc.processKeywords(keywords, [], (keywordLookups)=>{
+        console.log('Found keyword lookups: ', keywordLookups);
+
+        keywordLookups.forEach(lookup => {
+            let infoText = '';
+            if (lookup.observation.length > 0) {
+              lookup.observation.forEach(ob => {
+                  if (ob.observation.length>0) {
+                    if (ob.observation[0].measurement) {
+                      infoText = `${infoText}; ${ob.name}:${ob.observation[0].measurement}`;
+                    } else {
+                      infoText = `${infoText}; ${ob.name}:`;
+                      ob.observation[0].components.forEach(component => {
+                        const display = component.display.replace(ob.name,'').trim();
+                        infoText = `${infoText} ${display} ${component.measurement}`;
+                      });
+                    }
+                  }
+              }
+              );
+              if (infoText === '') {
+                this.text  = this.text.replace(lookup.keyword, lookup.keyword + ' (missing observation)');
+              } else {
+                this.text  = this.text.replace(lookup.keyword, lookup.keyword + ' (' + infoText.substring(2) +')');
+              }
+            }
+        });
+      });
 
       this.recognizer.close();
       this.recognizer = undefined;
