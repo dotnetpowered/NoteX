@@ -1,11 +1,11 @@
 [
     {
         "keyword": "overweight",
-        "observation": ["Weight"]
+        "observation": ["Weight","BMI"]
     },
     {
         "keyword": "underweight",
-        "observation": ["Weight"]
+        "observation": ["Weight","BMI"]
     },
     {
         "keyword": "hypertension",
