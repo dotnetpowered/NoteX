@@ -34,5 +34,15 @@
           "display": "Blood Pressure"        
          }
        ]
+    },
+    {
+        "name": "BMI",
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "39156-5",
+            "display": "Body Mass Index"
+          }
+        ]
     }
 ]

@@ -21,6 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ClinicalNoteComponent } from './clinical-note/clinical-note.component';
 import { Globals } from './shared/globals';
+import { ObservationComponent } from './observation/observation.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { Globals } from './shared/globals';
     LaunchComponent,
     DashboardComponent,
     ClinicalNoteComponent,
+    ObservationComponent,
   ],
   imports: [
     BrowserModule,

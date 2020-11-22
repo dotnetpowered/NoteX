@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { Globals } from '../shared/globals';
@@ -13,14 +13,17 @@ import { MappingService } from '../shared/mapping.service';
 })
 export class ClinicalNoteComponent implements OnInit {
 
-  text: string; 
+  noteText: string = '';//'Patient is overweight and has hypertension.'; 
   speechAuthToken: string;
   recognizer: any;
  
   language: any;
   patient: any;
+  id: string = null;
+  note: any;
 
-  constructor(private router: Router, private globals: Globals,
+  constructor(private router: Router, private globals: Globals, 
+    private route: ActivatedRoute,
     private mappingSvc: MappingService)  {
     this.language = 'en';
   }
@@ -28,6 +31,76 @@ export class ClinicalNoteComponent implements OnInit {
   ngOnInit(): void {
  
     this.patient = this.globals.patient;
+
+    this.route.params
+      .subscribe(params => {
+        console.log(params);
+        this.id = params['id'];
+        this.globals.fhirClient.api.read(
+          { id: this.id, type: 'DocumentReference'}).then(
+          (result)=>{
+            console.log('Loaded note', result.data);
+            this.note = result.data;
+            this.noteText = atob(this.note.content[0].attachment.data);
+          }
+        );
+      }
+  );
+
+
+  }
+
+  save(): void {
+    const htmlLessText = this.noteText.replace( /(<([^>]+)>)/ig, '');
+    const encodedText = btoa(htmlLessText);
+
+    if (this.id==null) {
+      this.create(encodedText);
+    } else {
+      this.update(encodedText);
+    }
+  }
+
+  update(encodedText): void {
+    this.note.content[0].attachment.data = encodedText;
+
+    let e: FHIR.SMART.Entry = { 
+      type: 'DocumentReference',
+      resource: this.note
+    };
+
+    console.log('Update note',e);
+    this.globals.fhirClient.api.update(e).then(()=>{this.router.navigate(['']);});
+
+  }
+
+
+  create(encodedText): void {
+    let e: FHIR.SMART.Entry = { 
+      type: 'DocumentReference',
+      resource: {
+        resourceType: 'DocumentReference',
+        type: {
+            coding: [
+                {
+                    system: "http://loinc.org",
+                    code: "18842-5",
+                    display: "Discharge Summary"
+                }
+            ],
+            text: "Discharge Summary"
+        },
+        subject: {
+            reference: "Patient/" + this.patient.id
+        },
+        content: [{attachment: {
+            contentType: "text/plain",
+            data: encodedText }}
+        ] 
+      }
+    };
+    console.log('Create note',e);
+    this.globals.fhirClient.api.create(e).then(()=>{this.router.navigate(['']);});
   }
 
   cancel(): void {
@@ -35,7 +108,6 @@ export class ClinicalNoteComponent implements OnInit {
   }
 
   startSpeakingClick() {
-    console.log('click');
     const speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(
       '5509abb54dd14415bd7b3b00fe9a8a1f', 'EastUS');
     speechConfig.speechRecognitionLanguage = 'en-US';
@@ -44,45 +116,47 @@ export class ClinicalNoteComponent implements OnInit {
 
     this.recognizer = new SpeechSDK.TranslationRecognizer(speechConfig, audioConfig);
     this.recognizer.recognizeOnceAsync((result)=> {
+        const translation = result.translations.get(this.language);
+        this.processText(translation);
+        this.recognizer.close();
+        this.recognizer = undefined;
+    });
+  }
 
-      let translation = result.translations.get(this.language);
-      console.log('Captured text: ' + translation);
-      this.text = translation;
-      
-      const keywords = this.text.split(' ');
-      this.mappingSvc.client = this.globals.fhirClient;
-      this.mappingSvc.processKeywords(keywords, [], (keywordLookups)=>{
-        console.log('Found keyword lookups: ', keywordLookups);
+  processText(text) {
+    console.log('Captured text: ' + text);      
+    this.mappingSvc.client = this.globals.fhirClient;
+    this.mappingSvc.processText(text, (keywordLookups)=>{
+      console.log('Found keyword lookups: ', keywordLookups);
 
-        keywordLookups.forEach(lookup => {
-            let infoText = '';
-            if (lookup.observation.length > 0) {
-              lookup.observation.forEach(ob => {
-                  if (ob.observation.length>0) {
-                    if (ob.observation[0].measurement) {
-                      infoText = `${infoText}; ${ob.name}:${ob.observation[0].measurement}`;
-                    } else {
-                      infoText = `${infoText}; ${ob.name}:`;
-                      ob.observation[0].components.forEach(component => {
-                        const display = component.display.replace(ob.name,'').trim();
-                        infoText = `${infoText} ${display} ${component.measurement}`;
-                      });
-                    }
+      keywordLookups.forEach(lookup => {
+          let infoText = '';
+          if (lookup.observation.length > 0) {
+            lookup.observation.forEach(ob => {
+                if (ob.observation.length>0) {
+                  if (ob.observation[0].measurement) {
+                    infoText = `${infoText}; ${ob.name}:${ob.observation[0].measurement}`;
+                  } else {
+                    infoText = `${infoText}; ${ob.name}:`;
+                    ob.observation[0].components.forEach(component => {
+                      const display = component.display.replace(ob.name,'').trim();
+                      infoText = `${infoText} ${display} ${component.measurement}`;
+                    });
                   }
-              }
-              );
-              if (infoText === '') {
-                this.text  = this.text.replace(lookup.keyword, lookup.keyword + ' (missing observation)');
-              } else {
-                this.text  = this.text.replace(lookup.keyword, lookup.keyword + ' (' + infoText.substring(2) +')');
-              }
+                }
             }
-        });
+            );
+            if (infoText === '') {
+              text  = text.replace(lookup.keyword, lookup.keyword + ' (missing observation)');
+            } else {
+              text  = text.replace(lookup.keyword, '<strong>' + 
+                lookup.keyword + '</strong> (<a href="/observation?keyword=' + lookup.keyword +
+                '">' + infoText.substring(2) +'</a>)');
+            }
+          }
+          localStorage.setItem('lookups', JSON.stringify(keywordLookups));
+          this.noteText = text;
       });
-
-      this.recognizer.close();
-      this.recognizer = undefined;
-
     });
   }
 

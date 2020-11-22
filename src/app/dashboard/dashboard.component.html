@@ -32,7 +32,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-note>
                     <tr>
-                        <td><a [routerLink]="['/note', note.id]">{{note.id}}</a></td>
+                        <td><a [routerLink]="['/clinical-note', note.id]">{{note.id}}</a></td>
                         <td>{{note.type.text}}</td>
                         <td>{{note.meta.lastUpdated | date : 'M/d/yyyy'}}</td>
                     </tr>
