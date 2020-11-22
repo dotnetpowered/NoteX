@@ -1,0 +1,30 @@
+<h1>Keyword: {{data.keyword}}</h1>
+
+<div *ngFor="let ob1 of data.observation">
+
+    <h2>Observations: {{ob1.name}}</h2>
+
+    <p-table [value]="ob1.observation">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Date</th>
+                <th>Value</th>
+                <th>Code</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ob>
+            <tr>
+                <td>{{ob.effectiveDateTime | date: 'M/d/yy h:mm a'}}</td>
+                <td *ngIf="ob.measurement">{{ob.measurement}}</td>
+                <td *ngIf="ob.components">
+                    <ul>
+                        <li *ngFor="let ob2 of ob.components">{{ob2.display}} {{ob2.measurement}}</li>
+                    </ul>
+                </td>
+                <td>{{ob.code}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
+
