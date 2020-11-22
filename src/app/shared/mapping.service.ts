@@ -6,7 +6,7 @@ import { Globals } from './globals';
 @Injectable()
 export class MappingService {
     keywordMapping: any[];
-    observations: any[];
+    observationMapping: any[];
     client: FHIR.SMART.Client;
 
     constructor(private http: HttpClient, private globals: Globals) {
@@ -18,27 +18,37 @@ export class MappingService {
         });
 
         this.getObservations().subscribe(o => {
-            this.observations = o;
+            this.observationMapping = o;
         });
     }
 
-    processKeywords(keywords: string[], keywordLookups: any[], callback: (keywordLookups: any[]) => void) {
+    processText(text: string, callback: (keywordLookups: any[]) => void) {
+        const keywordLookups = [];
+        const htmlLessText = text.replace( /(<([^>]+)>)/ig, '');
+        const punctuationless = htmlLessText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        const finalString = punctuationless.replace(/\s{2,}/g," ");
+        const keywords = finalString.split(' ');
+
+        this.processKeywords(keywords, keywordLookups, callback);
+    }
+
+    private processKeywords(keywords: string[], keywordLookups: any[], callback: (keywordLookups: any[]) => void) {
 
         let mapping = null;
         let keyword = null;
         while (keywords.length !== 0 && mapping == null)
         {
             keyword = keywords.pop();
-            const s = keyword.toLowerCase().replace('.', '');
-            mapping = this.keywordMapping.find(m => m.keyword === s);
+            mapping = this.keywordMapping.find(m => m.keyword.toLowerCase() === keyword.toLowerCase());
         }
         if (mapping != null) {
             console.log(`Processing mapping for keyword "${keyword}"`, mapping);
 
-            const keywordLookup = { keyword: mapping.keyword, observation: [] };
+            const keywordLookup = { keyword, observation: [] };
             keywordLookups.push(keywordLookup);
 
-            this.processObservations(mapping.observation, keywordLookup, () =>
+            const observations = [...mapping.observation];
+            this.processObservations(observations, keywordLookup, () =>
                 this.processKeywords(keywords, keywordLookups, callback)
             );
         } else {
@@ -46,11 +56,11 @@ export class MappingService {
         }
     }
 
-    processObservations(observations: any[], keywordLookup, callback){
+    private processObservations(observations: any[], keywordLookup, callback){
 
         const o = observations.pop();
 
-        const ob = this.observations.find(observation => observation.name === o);
+        const ob = this.observationMapping.find(observation => observation.name === o);
         const codes = [];
         ob.coding.forEach(c => {
             const code = c.code as string;
@@ -67,7 +77,7 @@ export class MappingService {
         });
     }
 
-    lookupFhirObservations(codes: string[], keywordLookup: any, callback: (keywordLookup: any) => void) {
+    private lookupFhirObservations(codes: string[], keywordLookup: any, callback: (keywordLookup: any) => void) {
 
         const code = codes.pop();
 
@@ -101,7 +111,7 @@ export class MappingService {
           ).catch(reason => console.log(reason));
     }
 
-    processFhirObservation(response, code, keywordLookup) {
+    private processFhirObservation(response, code, keywordLookup) {
         const observations = response.data.entry as FHIR.SMART.Resource[];
 
         if (observations != null) {
@@ -134,13 +144,13 @@ export class MappingService {
         }
     }
 
-    getKeywordMapping(): Observable<any[]>
+    private getKeywordMapping(): Observable<any[]>
     {
         const url = `/assets/keyword-mapping.json`;
         return this.http.get<any[]>(url);
     }
 
-    getObservations(): Observable<any[]>
+    private getObservations(): Observable<any[]>
     {
         const url = `/assets/observations.json`;
         return this.http.get<any[]>(url);
