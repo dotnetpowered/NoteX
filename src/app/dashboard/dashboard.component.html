@@ -1,23 +1,24 @@
 <div class="p-grid">
     <div class="p-col-3">
-        <p-card header="Welcome">
+        <h2 style="margin-top: 0px; margin-bottom: 20px;">NoteX</h2>
+        <p>
+            <strong>Welcome</strong><br>
             <span *ngIf="user?.name[0].prefix?.length>0">{{user?.name[0].prefix[0]}}</span> {{user?.name[0].given[0]}} {{user?.name[0].family}}
-
-            <div>
-                <p>Notes for patient:</p>
-                <ul>
-                    <li>{{patient?.name[0].family}}, {{patient?.name[0].given[0]}}</li>
-                </ul>             
-            </div>
-        </p-card>
+        </p>
+        <div>
+            <p>Notes for patient:</p>
+            <ul>
+                <li>{{patient?.name[0].family}}, {{patient?.name[0].given[0]}}</li>
+            </ul>             
+        </div>
     </div>
     <div class="p-col-9">
-        <p-card header="Notes">
+        <p-card>
             <div class="p-grid">
-                <div class="p-col-9">
-                    <p>Patient Notes:</p>                
+                <div class="p-col-8">
+                    <h2 style="margin: 0px;">Clinical Notes</h2>                
                 </div>
-                <div class="p-col-3">
+                <div class="p-col-3" style="text-align: right;">
                     <button pButton label="Add" (click)="addNote()"></button> 
                 </div>
             </div>
