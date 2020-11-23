@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { Globals } from '../shared/globals';
 import { MappingService } from '../shared/mapping.service';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-clinical-note',
@@ -23,12 +24,21 @@ export class ClinicalNoteComponent implements OnInit {
   note: any;
   action: string;
   message: string;
+  selectedType: string;
+  noteTypes: SelectItem[] = [];
 
   constructor(private router: Router, private globals: Globals, 
     private route: ActivatedRoute,
     private mappingSvc: MappingService)  {
     this.language = 'en';
     this.setDefaultMessage();
+
+    this.noteTypes.push({ label:'Consultation Note',value:'11488-4' });
+    this.noteTypes.push({ label:'Discharge Summary',value:'18842-5' });
+    this.noteTypes.push({ label:'History & Physical Note',value:'34117-2' });
+    this.noteTypes.push({ label:'Procedures Note',value:'28570-0' });
+    this.noteTypes.push({ label:'Progress Note',value:'11506-3' });
+    this.selectedType = '11488-4';
   }
 
   setDefaultMessage() {
@@ -53,15 +63,13 @@ export class ClinicalNoteComponent implements OnInit {
               console.log('Loaded note', result.data);
               this.note = result.data;
               this.noteText = atob(this.note.content[0].attachment.data);
+              this.selectedType = this.note.type.coding[0].code;
             }
           );
         } else {
           this.action = 'Add';
         }
-      }
-  );
-
-
+      });
   }
 
   save(): void {
@@ -76,7 +84,11 @@ export class ClinicalNoteComponent implements OnInit {
   }
 
   update(encodedText): void {
+    const typeLabel = this.noteTypes.find(n=>n.value === this.selectedType).label;
     this.note.content[0].attachment.data = encodedText;
+    this.note.type.coding[0].code = this.selectedType;
+    this.note.type.coding[0].display = typeLabel;
+    this.note.type.text = typeLabel;
 
     let e: FHIR.SMART.Entry = { 
       type: 'DocumentReference',
@@ -88,8 +100,8 @@ export class ClinicalNoteComponent implements OnInit {
 
   }
 
-
   create(encodedText): void {
+    const typeLabel = this.noteTypes.find(n=>n.value === this.selectedType).label;
     let e: FHIR.SMART.Entry = { 
       type: 'DocumentReference',
       resource: {
@@ -98,11 +110,11 @@ export class ClinicalNoteComponent implements OnInit {
             coding: [
                 {
                     system: "http://loinc.org",
-                    code: "18842-5",
-                    display: "Discharge Summary"
+                    code: this.selectedType,
+                    display: typeLabel
                 }
             ],
-            text: "Discharge Summary"
+            text: typeLabel
         },
         subject: {
             reference: "Patient/" + this.patient.id

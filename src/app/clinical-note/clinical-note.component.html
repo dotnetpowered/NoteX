@@ -15,6 +15,10 @@
     <div class="p-col-6" style="margin-top: 0.5rem;">
         <span>{{message}}</span>
     </div>
+    <div class="p-col-4" style="text-align: right;">
+        <span style="padding-right: 5px;">Type:</span>
+        <p-dropdown [options]="noteTypes" [(ngModel)]="selectedType"></p-dropdown>
+    </div>
 </div>
 <p-editor [(ngModel)]="noteText">
     <p-header> </p-header>
