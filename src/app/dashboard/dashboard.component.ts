@@ -18,7 +18,8 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router, private globals: Globals) { }
 
   addNote(): void {
-     this.router.navigate(['clinical-note']);
+     const id = 'new';
+     this.router.navigate(['clinical-note', id]);
   }
 
   ngOnInit(): void {
