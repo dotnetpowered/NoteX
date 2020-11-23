@@ -123,7 +123,7 @@ export class ClinicalNoteComponent implements OnInit {
 
   startSpeakingClick() {
     this.message = 'Listening...';
-    
+
     const speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(
       '5509abb54dd14415bd7b3b00fe9a8a1f', 'EastUS');
     speechConfig.speechRecognitionLanguage = 'en-US';
@@ -133,6 +133,7 @@ export class ClinicalNoteComponent implements OnInit {
     this.recognizer = new SpeechSDK.TranslationRecognizer(speechConfig, audioConfig);
     this.recognizer.recognizeOnceAsync((result)=> {
         const translation = result.translations.get(this.language);
+        this.message = 'Processing...';
         this.processText(translation);
         this.recognizer.close();
         this.recognizer = undefined;
@@ -170,9 +171,10 @@ export class ClinicalNoteComponent implements OnInit {
                 '">' + infoText.substring(2) +'</a>)');
             }
           }
-          localStorage.setItem('lookups', JSON.stringify(keywordLookups));
-          this.noteText = text;
       });
+      localStorage.setItem('lookups', JSON.stringify(keywordLookups));
+      this.noteText = text;
+      this.setDefaultMessage();
     });
   }
 
