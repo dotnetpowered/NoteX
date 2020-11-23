@@ -5,7 +5,7 @@
         <p>DOB: {{patient?.birthDate}}</p>
     </div>
     <div class="p-col-6" style="text-align: right;">
-        <h1>Add Clinical Note</h1>
+        <h1>{{action}} Clinical Note</h1>
     </div> 
 </div>
 <div class="p-grid">
@@ -13,7 +13,7 @@
         <button pButton icon="pi pi-comment" label="Speak" (click)="startSpeakingClick()"></button> 
     </div>
     <div class="p-col-6" style="margin-top: 0.5rem;">
-        <span>Click the speak button and begin speaking...</span>
+        <span>{{message}}</span>
     </div>
 </div>
 <p-editor [(ngModel)]="noteText" [style]="{'height':'320px'}"></p-editor>

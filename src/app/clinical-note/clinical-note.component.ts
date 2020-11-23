@@ -21,11 +21,18 @@ export class ClinicalNoteComponent implements OnInit {
   patient: any;
   id: string = null;
   note: any;
+  action: string;
+  message: string;
 
   constructor(private router: Router, private globals: Globals, 
     private route: ActivatedRoute,
     private mappingSvc: MappingService)  {
     this.language = 'en';
+    this.setDefaultMessage();
+  }
+
+  setDefaultMessage() {
+    this.message = 'Click the speak button and begin speaking...';
   }
 
   ngOnInit(): void {
@@ -35,15 +42,22 @@ export class ClinicalNoteComponent implements OnInit {
     this.route.params
       .subscribe(params => {
         console.log(params);
-        this.id = params['id'];
-        this.globals.fhirClient.api.read(
-          { id: this.id, type: 'DocumentReference'}).then(
-          (result)=>{
-            console.log('Loaded note', result.data);
-            this.note = result.data;
-            this.noteText = atob(this.note.content[0].attachment.data);
-          }
-        );
+        const idParam = params['id'];
+
+        if (idParam !== 'new') {
+          this.id = idParam;
+          this.action = 'Edit';
+          this.globals.fhirClient.api.read(
+            { id: this.id, type: 'DocumentReference'}).then(
+            (result)=>{
+              console.log('Loaded note', result.data);
+              this.note = result.data;
+              this.noteText = atob(this.note.content[0].attachment.data);
+            }
+          );
+        } else {
+          this.action = 'Add';
+        }
       }
   );
 
@@ -108,6 +122,8 @@ export class ClinicalNoteComponent implements OnInit {
   }
 
   startSpeakingClick() {
+    this.message = 'Listening...';
+    
     const speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(
       '5509abb54dd14415bd7b3b00fe9a8a1f', 'EastUS');
     speechConfig.speechRecognitionLanguage = 'en-US';
