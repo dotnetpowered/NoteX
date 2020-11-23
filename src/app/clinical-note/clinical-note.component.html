@@ -16,8 +16,10 @@
         <span>{{message}}</span>
     </div>
 </div>
-<p-editor [(ngModel)]="noteText" [style]="{'height':'320px'}"></p-editor>
-<p>When you finish the note, please review and edit as needed.  The bold text has been used to retrieve information from the patient’s medical record.</p>
+<p-editor [(ngModel)]="noteText">
+    <p-header> </p-header>
+</p-editor>
+<p>When you finish the note, please review and edit as needed.  The bold keywords has been used to retrieve information from the patient’s medical record.</p>
 <button pButton icon="pi pi-check" label="Save Note" style="margin-right: 2rem;" (click)="save()"></button> 
 <button pButton label="Cancel" (click)="cancel()"></button> 
 <!-- <button pButton label="Process" (click)="processText(noteText)"></button>  -->
