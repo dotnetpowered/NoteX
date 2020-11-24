@@ -53,6 +53,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "baseHref": "/pages/britchie3/Healthcare-Note-Enhancer/",
               "budgets": [
                 {
                   "type": "initial",
@@ -99,8 +100,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [
-            ]
+            "scripts": []
           }
         },
         "lint": {
@@ -127,8 +127,13 @@
               "devServerTarget": "healthcare-note-enhancer:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {}
         }
       }
-    }},
+    }
+  },
   "defaultProject": "healthcare-note-enhancer"
 }
