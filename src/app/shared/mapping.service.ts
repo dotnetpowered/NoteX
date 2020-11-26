@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from './globals';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class MappingService {
@@ -9,7 +10,8 @@ export class MappingService {
     observationMapping: any[];
     client: FHIR.SMART.Client;
 
-    constructor(private http: HttpClient, private globals: Globals) {
+    constructor(private http: HttpClient,
+        private globals: Globals) {
 
         this.client = globals.fhirClient;
 
@@ -146,13 +148,13 @@ export class MappingService {
 
     private getKeywordMapping(): Observable<any[]>
     {
-        const url = `/assets/keyword-mapping.json`;
+        const url = `${environment.mappingAssetsBaseRef}/keyword-mapping.json`;
         return this.http.get<any[]>(url);
     }
 
     private getObservations(): Observable<any[]>
     {
-        const url = `/assets/observations.json`;
+        const url = `${environment.mappingAssetsBaseRef}/observations.json`;
         return this.http.get<any[]>(url);
     }
 }
