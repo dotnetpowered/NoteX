@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { Globals } from '../shared/globals';
 import { MappingService } from '../shared/mapping.service';
 import { SelectItem } from 'primeng/api';
+import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 
 @Component({
   selector: 'app-clinical-note',
@@ -14,7 +13,7 @@ import { SelectItem } from 'primeng/api';
 })
 export class ClinicalNoteComponent implements OnInit {
 
-  noteText: string = '';//'Patient is overweight and has hypertension.'; 
+  noteText: string = ''; 
   speechAuthToken: string;
   recognizer: any;
  
@@ -178,14 +177,21 @@ export class ClinicalNoteComponent implements OnInit {
             if (infoText === '') {
               text  = text.replace(lookup.keyword, lookup.keyword + ' (missing observation)');
             } else {
-              text  = text.replace(lookup.keyword, '<strong>' + 
-                lookup.keyword + '</strong> (<a href="/observation?keyword=' + lookup.keyword +
-                '">' + infoText.substring(2) +'</a>)');
+              text  = text.replace(lookup.keyword, '<strong>' + lookup.keyword +
+                '</strong> (<a href="observation?keyword=' + lookup.keyword + '">' +
+                infoText.substring(2) +'</a>)');
             }
           }
       });
+      
+      const lookupJson = localStorage.getItem('lookups');
+
+      if (lookupJson != null && lookupJson !== '' ) {
+        const lookups = JSON.parse(lookupJson);
+        lookups.forEach(element => { keywordLookups.push(element) });
+      }
       localStorage.setItem('lookups', JSON.stringify(keywordLookups));
-      this.noteText = text;
+      this.noteText = this.noteText + ' ' + text;
       this.setDefaultMessage();
     });
   }
