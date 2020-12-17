@@ -1,22 +1,29 @@
 <div class="p-grid">
     <div class="p-col-6">
-        <h2>Patient Name</h2>
-        <p>Gender: </p>
-        <p>DOB: </p>
+        <h2>{{patient?.name[0].family}}, {{patient?.name[0].given[0]}}</h2>
+        <p>Gender: {{patient?.gender}}</p>
+        <p>DOB: {{patient?.birthDate}}</p>
     </div>
     <div class="p-col-6" style="text-align: right;">
-        <h1>Add Clinical Note</h1>
+        <h1>{{action}} Clinical Note</h1>
     </div> 
 </div>
 <div class="p-grid">
     <div class="p-col-2">
-        <button pButton icon="pi pi-comment" label="Speak"></button> 
+        <button pButton icon="pi pi-comment" label="Speak" (click)="startSpeakingClick()"></button> 
     </div>
     <div class="p-col-6" style="margin-top: 0.5rem;">
-        <span>Click the speak button and begin speaking...</span>
+        <span>{{message}}</span>
+    </div>
+    <div class="p-col-4" style="text-align: right;">
+        <span style="padding-right: 5px;">Type:</span>
+        <p-dropdown [options]="noteTypes" [(ngModel)]="selectedType"></p-dropdown>
     </div>
 </div>
-<p-editor [(ngModel)]="text" [style]="{'height':'320px'}"></p-editor>
-<p>When you finish the note, please review and edit as needed.  The bold text has been used to retrieve information from the patient’s medical record.</p>
-<button pButton icon="pi pi-check" label="Save Note" style="margin-right: 2rem;"></button> 
+<p-editor [(ngModel)]="noteText">
+    <p-header> </p-header>
+</p-editor>
+<p>When you finish the note, please review and edit as needed.  The bold keywords has been used to retrieve information from the patient’s medical record.</p>
+<button pButton icon="pi pi-check" label="Save Note" style="margin-right: 2rem;" (click)="save()"></button> 
 <button pButton label="Cancel" (click)="cancel()"></button> 
+<!-- <button pButton label="Process" (click)="processText(noteText)"></button>  -->

@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  mappingAssetsBaseRef: '/pages/britchie3/Healthcare-Note-Enhancer/assets'
 };
