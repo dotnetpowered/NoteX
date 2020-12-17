@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -10,7 +11,8 @@ export class ObservationComponent implements OnInit {
 
   data: any;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,
+              private titleService: Title) { }
 
   ngOnInit(): void {
     console.log('checking oauth2 ready');
@@ -25,6 +27,7 @@ export class ObservationComponent implements OnInit {
           const keyword = params['keyword'];
           const lookupValues = lookups.find(v=>v.keyword === keyword);
           this.data = lookupValues;
+          this.titleService.setTitle('Observations for: ' + keyword);
           console.log(lookupValues);
         }
       );

@@ -1,8 +1,8 @@
-<h1>Keyword: {{data.keyword}}</h1>
+<h1>Keyword: {{data?.keyword}}</h1>
 
-<div *ngFor="let ob1 of data.observation">
+<div *ngFor="let ob1 of data?.observation">
 
-    <h2>Observations: {{ob1.name}}</h2>
+    <h2>Observation: {{ob1.name}}</h2>
 
     <p-table [value]="ob1.observation">
         <ng-template pTemplate="header">
