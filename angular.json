@@ -53,7 +53,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "baseHref": "/pages/britchie3/Healthcare-Note-Enhancer/",
+              "baseHref": "/NoteX/",
               "budgets": [
                 {
                   "type": "initial",
