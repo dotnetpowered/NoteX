@@ -1,14 +1,14 @@
 # NoteX
 The Healthcare Note Enhancer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.2.
-
 ## Launch Application via SMART on FHIR
 
 https://launch.smarthealthit.org/?auth_error=&fhir_version_1=r4&fhir_version_2=r4&iss=&launch_ehr=1&launch_url=https%3A%2F%2Fdotnetpowered.github.io%2FNoteX%2Flaunch&patient=494743a2-fea5-4827-8f02-c2b91e4a4c9e&prov_skip_auth=1&prov_skip_login=1&provider=37881086-7b05-4b18-a279-08e331f50e9b&pt_skip_auth=1&pt_skip_login=0&public_key=&sb=&sde=&sim_ehr=0&token_lifetime=15&user_pt=494743a2-fea5-4827-8f02-c2b91e4a4c9e
 
 
 ## Development server
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.2.
 
 Run `ng serve` for a dev server running on port 4200. The app will automatically reload if you change any of the source files.
 
