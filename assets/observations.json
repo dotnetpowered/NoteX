@@ -1,0 +1,48 @@
+[
+    {
+        "name": "Weight",
+        "coding": [
+            {
+                "system": "http://loinc.org",
+                "code": "29463-7",
+                "display": "Body Weight"
+              },
+              {
+                "system": "http://loinc.org",
+                "code": "3141-9",
+                "display": "Body weight Measured"
+              },
+              {
+                "system": "http://snomed.info/sct",
+                "code": "27113001",
+                "display": "Body weight"
+              },
+              {
+                "system": "http://acme.org/devices/clinical-codes",
+                "code": "body-weight",
+                "display": "Body Weight"
+              }
+        ]
+
+    },
+    {
+       "name" :"Blood Pressure",
+       "coding": [
+         {
+          "system": "http://loinc.org",
+          "code": "55284-4",
+          "display": "Blood Pressure"        
+         }
+       ]
+    },
+    {
+        "name": "BMI",
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "39156-5",
+            "display": "Body Mass Index"
+          }
+        ]
+    }
+]
