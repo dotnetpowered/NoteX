@@ -3,12 +3,14 @@ import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from './globals';
 import { environment } from '../../environments/environment';
+import { fhirclient } from 'fhirclient/lib/types';
+import Client from 'fhirclient/lib/Client';
 
 @Injectable()
 export class MappingService {
     keywordMapping: any[];
     observationMapping: any[];
-    client: FHIR.SMART.Client;
+    client: Client;
 
     constructor(private http: HttpClient,
         private globals: Globals) {
@@ -86,7 +88,7 @@ export class MappingService {
         const query =  {
             type: 'Observation',
             query: { patient: this.client.patient.id, code}
-        } as FHIR.SMART.SearchParams;
+        } as fhirclient.SMART.SearchParams;
 
         console.log('Executing FHIR query for observation: ' + code, query);
         this.client.api.search(query).then(

@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-
+import { Resource } from 'fhirclient/lib/types';
+import Client from 'fhirclient/lib/Client';
 @Injectable({
   providedIn: 'root',
 })
 export class Globals {
+
   patient: any;
-  fhirClient: FHIR.SMART.Client;
-  byCodes: (...codes: string[]) => FHIR.SMART.Resource[];
+  fhirClient: Client;
+  byCodes: (...codes: string[]) => Resource[];
+
 }

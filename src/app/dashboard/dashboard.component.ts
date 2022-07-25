@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { Globals } from '../shared/globals';
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',

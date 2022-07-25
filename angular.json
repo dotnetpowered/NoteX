@@ -33,7 +33,7 @@
               "node_modules/quill/dist/quill.snow.css"
             ],
             "scripts": [
-              "./node_modules/fhir-js-client/dist/fhir-client.js",
+              "./node_modules/fhirclient/build/fhir-client.js",
               "./node_modules/quill/dist/quill.js"
             ]
           },

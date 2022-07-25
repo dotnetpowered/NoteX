@@ -1,8 +1,10 @@
+///<reference path="../../../node_modules/@types/fhir/index.d.ts"/>
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Globals } from '../shared/globals';
 import { MappingService } from '../shared/mapping.service';
 import { SelectItem } from 'primeng/api';
+import { fhirclient } from 'fhirClient/lib/types';
 import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 
 @Component({
@@ -89,7 +91,7 @@ export class ClinicalNoteComponent implements OnInit {
     this.note.type.coding[0].display = typeLabel;
     this.note.type.text = typeLabel;
 
-    let e: FHIR.SMART.Entry = { 
+    let e: fhir.Entry = { 
       type: 'DocumentReference',
       resource: this.note
     };
@@ -101,10 +103,12 @@ export class ClinicalNoteComponent implements OnInit {
 
   create(encodedText): void {
     const typeLabel = this.noteTypes.find(n=>n.value === this.selectedType).label;
-    let e: FHIR.SMART.Entry = { 
-      type: 'DocumentReference',
-      resource: {
+    let e: fhir.DocumentReference = { 
+      //type: 'DocumentReference',
+      //resource: {
         resourceType: 'DocumentReference',
+        status:'current',
+        indexed:Date.now.toString(),
         type: {
             coding: [
                 {
@@ -122,7 +126,7 @@ export class ClinicalNoteComponent implements OnInit {
             contentType: "text/plain",
             data: encodedText }}
         ] 
-      }
+      //}
     };
     console.log('Create note',e);
     this.globals.fhirClient.api.create(e).then(()=>{this.router.navigate(['']);});
